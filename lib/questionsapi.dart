@@ -5,17 +5,42 @@ library questionsapi;
 import 'package:rpc/rpc.dart';
 // import 'dart:async';
 
+class Question {
+  int id;
+  String title;
+  String summary;
+}
+
 class QuestionsResponse {
   String result;
   QuestionsResponse();
 }
 
-@ApiClass(version: '0.1')
+@ApiClass(
+  name: 'qa',
+  version: 'v1'
+)
 class QuestionsApi {
   QuestionsApi();
 
-  @ApiMethod(path: 'test')
+  @ApiResource()
+  QuestionResource resource = new QuestionResource();
+
+  @ApiMethod(path: 'status')
   QuestionsResponse test() {
-    return new QuestionsResponse()..result = 'Test';
+    return new QuestionsResponse()..result = 'Up and running...';
+  }
+}
+
+class QuestionResource {
+  List _questions = [];
+
+  @ApiMethod(path: 'questions')
+  List<Question> getQuestions() => _questions;
+
+  @ApiMethod(path: 'questions', method: 'POST')
+  Question postQuestion(Question question) {
+    _questions.add(question);
+    return question;
   }
 }
